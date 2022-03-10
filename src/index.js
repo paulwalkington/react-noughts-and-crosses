@@ -30,6 +30,10 @@ class Board extends React.Component {
     };
   }
 
+  resetBoard() {
+    this.setState({ squares: Array(9).fill(null), xIsNext: "X" });
+  }
+
   handleClick(i) {
     const squares = this.state.squares.slice();
     if (calculateWinner(squares) || squares[i]) {
@@ -76,12 +80,39 @@ class Board extends React.Component {
           {this.renderSquare(7)}
           {this.renderSquare(8)}
         </div>
+        <div className="reset-game">
+          <button className="reset" onClick={() => this.resetBoard()}>
+            Reset Board
+          </button>
+        </div>
       </div>
     );
   }
 }
 
+// {
+//   winner != null && (
+//     <div className="reset-game">
+//       <button className="reset" onClick={() => this.resetBoard()}>
+//         Reset Board
+//       </button>
+//     </div>
+//   );
+// }
+
 class Game extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      history: [
+        {
+          squares: Array(9).fill(null),
+        },
+      ],
+      xIsNext: true,
+    };
+  }
+
   render() {
     return (
       <div className="game">
