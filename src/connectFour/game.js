@@ -1,23 +1,47 @@
 import { Board } from "./board";
 import React from "react";
+import { calculateWinner } from "./calculateWinner";
 
 export class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       board: [
-        [null, "red", null, null, null, null, null],
-        [null, "red", null, null, null, null, null],
-        [null, "red", null, null, null, null, null],
-        [null, "red", null, "yellow", null, null, null],
-        [null, "red", null, null, null, null, null],
-        [null, "red", null, null, null, null, null],
+        [null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null],
       ],
       yellowIsNext: true,
+      numberOfWinsForYellow: 0,
+      numberOfWinsForRed: 0,
+      winner: null,
     };
   }
 
+  resetBoard() {
+    console.log("reset board");
+    this.setState({
+      winner: null,
+      board: [
+        [null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null],
+      ],
+      yellowIsNext: true,
+    });
+  }
+
   handleClick(row, column) {
+    if (this.state.winner) {
+      return;
+    }
+
     const board = this.state.board.slice();
 
     for (let rowNumber = board.length - 1; rowNumber >= 0; rowNumber--) {
@@ -29,24 +53,41 @@ export class Game extends React.Component {
           board: board,
           yellowIsNext: !this.state.yellowIsNext,
         });
-        return;
+        break;
       }
+    }
+
+    const isRedWinner = calculateWinner(board, "red");
+    const isYellowWinner = calculateWinner(board, "yellow");
+
+    if (isRedWinner) {
+      this.setState({
+        numberOfWinsForRed: this.state.numberOfWinsForRed + 1,
+        winner: "red",
+      });
+    }
+    if (isYellowWinner) {
+      this.setState({
+        numberOfWinsForYellow: this.state.numberOfWinsForYellow + 1,
+        winner: "yellow",
+      });
     }
   }
 
   render() {
     const board = this.state.board.slice();
-    // const winner = calculateWinner(board);
+    const winner = this.state.winner;
+    let status;
 
-    // let status;
-    // if (winner) {
-    //   status = "Winner: " + winner;
-    // } else {
-    //   status = "Next player: " + (this.state.yellowIsNext ? "X" : "O");
-    // }
+    if (winner) {
+      status = "Winner: " + winner;
+    } else {
+      status = "Next player: " + (this.state.yellowIsNext ? "yellow" : "red");
+    }
 
-    const status =
-      "Next player: " + (this.state.yellowIsNext ? "yellow" : "red");
+    const restartButton = (
+      <button onClick={() => this.resetBoard()}>restart</button>
+    );
 
     return (
       <div className="game">
@@ -56,28 +97,13 @@ export class Game extends React.Component {
             onClick={(row, column) => this.handleClick(row, column)}
           />
         </div>
-        <div className="game-info">{<div>{status}</div>}</div>
+        <div className="game-info">
+          <p>{"numberOfWinsForRed: " + this.state.numberOfWinsForRed}</p>
+          <p>{"numberOfWinsForYellow: " + this.state.numberOfWinsForYellow}</p>
+          <p>{status}</p>
+          <p>{restartButton}</p>
+        </div>
       </div>
     );
   }
 }
-
-// function calculateWinner(board) {
-//   const lines = [
-//     [0, 1, 2],
-//     [3, 4, 5],
-//     [6, 7, 8],
-//     [0, 3, 6],
-//     [1, 4, 7],
-//     [2, 5, 8],
-//     [0, 4, 8],
-//     [2, 4, 6],
-//   ];
-//   for (let i = 0; i < lines.length; i++) {
-//     const [a, b, c] = lines[i];
-//     if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-//       return board[a];
-//     }
-//   }
-//   return null;
-// }
