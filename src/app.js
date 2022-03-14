@@ -1,6 +1,7 @@
 import React from "react";
 import "./index.css";
-import { Game } from "./game";
+import { Game as NoughtsAndCrosses } from "./noughtsAndCrosses/game";
+import { Game as ConnectFour } from "./connectFour/game";
 import Home from "./pages/home";
 import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
 
@@ -17,6 +18,9 @@ function App() {
             <li>
               <Link to="/nought-and-crosses">nought-and-crosses</Link>
             </li>
+            <li>
+              <Link to="/connect-four">connect-four</Link>
+            </li>
           </ol>
         </nav>
 
@@ -24,7 +28,10 @@ function App() {
             renders the first one that matches the current URL. */}
         <Switch>
           <Route path="/nought-and-crosses">
-            <Game />
+            <NoughtsAndCrosses />
+          </Route>
+          <Route path="/connect-four">
+            <ConnectFour />
           </Route>
           <Route path="/">
             <Home />
