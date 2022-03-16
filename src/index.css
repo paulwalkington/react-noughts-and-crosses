@@ -49,3 +49,20 @@ ul {
 .game-info {
   margin-left: 20px;
 }
+
+
+.counter {
+  background-color: #04AA6D;
+  border: none;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 4px;
+  border-radius: 50%;
+}
+
+.red {background-color: #f44336;} 
+.yellow {background-color: #f2f700;} 
